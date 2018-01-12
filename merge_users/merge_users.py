@@ -43,9 +43,10 @@ options = {
         "AbbrevStandard":	True,
 	"MiscChanges":		True,
         "RemoveDupSurnames":	True,
-        "RemoveMatchingNicks":	True,
+        "RemoveMatchingNick":	True,
         "RemoveRepeats":	True,
         "TitleCase":		True,
+	"RemoveCallFromNick":	True,
 
         "AbbrevCountries":	False,
         "AbbrevDirections":	False,
@@ -150,7 +151,6 @@ directionAbbrevs = {
 	"West":			"W.",
 }
 
-
 enable_options = [x for x in sorted(options)]
 disable_options = ["No" + x for x in enable_options]
 
@@ -213,11 +213,15 @@ def abbrevDirections(s):
 
 	return " ".join(fields)
 
+def removeSubstr(s, sub):
+	index = s.upper().find(sub.upper())
+	if index >= 0:
+		s = s[:index] + s[index+len(sub):]
+
+	return s
+
 def massage_users():
 	for dmr_id, user in users.iteritems():
-		for key, val in user.iteritems():
-			user[key] = cleanup_blanks(val)
-
 		# remove blanks from within callsigns
 		user["call"] = user["call"].replace(" ", "")
 
@@ -262,10 +266,16 @@ def massage_users():
 			user["city"] = abbrevDirections(user["city"])
 			user["state"] = abbrevDirections(user["state"])
 
+		if options["RemoveCallFromNick"]:
+			user["nick"] = removeSubstr(user["nick"], user["call"])
+
 		if options["MiscChanges"]:
 			s = user["city"]
 			if s.endswith(" (B,"):
 				user["city"] = s[:-len(" (B")]
+
+		for key, val in user.iteritems():
+			user[key] = cleanup_blanks(val)
 
 		users[dmr_id] = user
 
