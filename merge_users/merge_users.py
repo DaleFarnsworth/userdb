@@ -238,7 +238,7 @@ def massage_users():
 			user["state"] = titleCase(user["state"])
 			user["country"] = titleCase(user["country"])
 
-		if options["RemoveMatchingNicks"]:
+		if options["RemoveMatchingNick"]:
 			first = user["name"].split(" ", 2)[0]
 			if first == user["nick"]:
 				user["nick"] = ""
@@ -279,7 +279,7 @@ def massage_users():
 
 		users[dmr_id] = user
 
-def do_line(line):
+def read_user_line(line):
 	if "," not in line:
 		return
 	line = line.strip("\n")
@@ -312,38 +312,46 @@ def do_line(line):
 
 	users[dmr_id] = user
 
-def do_file(file):
-	for line in file:
-		do_line(line)
-
-def main():
+def process_args():
 	parser = argparse.ArgumentParser(description="Merge userdb files")
 	parser.add_argument("-o", nargs=1, dest="options",
 		action="append", choices=enable_options + disable_options)
 
 	parser.add_argument("files", metavar="filename", nargs="*",
 		type=argparse.FileType("r"), help="a filename to be merged")
+
 	args = parser.parse_args()
 
-	if args.options != None:
-		for opt in args.options:
-			for opt in opt:
-				if opt in enable_options:
-					options[opt] = True
-				elif opt in disable_options:
-					options[opt[2:]] = False
+	if args.options == None:
+		return args
 
-	for file in args.files:
-		do_file(file)
+	for opt in args.options:
+		for opt in opt:
+			if opt in enable_options:
+				options[opt] = True
+			elif opt in disable_options:
+				options[opt[2:]] = False
 
-	massage_users()
+	return args
 
+def read_user_files(files):
+	for file in files:
+		for line in file:
+			read_user_line(line)
+
+def output_users():
 	for i, u in sorted([(int(i), u) for i, u in users.iteritems()]):
 		line = "{0},{1},{2},{3},{4},{5},{6}".format(
 			u["id"], u["call"], u["name"], u["city"], u["state"],
 			u["nick"], u["country"])
 
 		print(line)
+
+def main():
+	args = process_args()
+	read_user_files(args.files)
+	massage_users()
+	output_users()
 
 if __name__ == '__main__':
 	main()
