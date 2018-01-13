@@ -47,6 +47,7 @@ options = {
         "RemoveRepeats":	True,
         "TitleCase":		True,
 	"RemoveCallFromNick":	True,
+	"FixRomanNumerals":	True,
 
         "AbbrevCountries":	False,
         "AbbrevDirections":	False,
@@ -189,7 +190,7 @@ def removeRepeats(s):
 def titleCase(s):
 	fields = s.split()
 	for i, field in enumerate(fields):
-		if len(field) < 3:
+		if len(field) < 4:
 			continue
 
 		all_upper = True
@@ -207,9 +208,9 @@ def titleCase(s):
 def abbrevDirections(s):
 	fields = s.split(" ")
 
-	abbrev = directionAbbrevs.get(field[0], "")
+	abbrev = directionAbbrevs.get(fields[0], "")
 	if abbrev != "":
-		field[0] = abbrev
+		fields[0] = abbrev
 
 	return " ".join(fields)
 
@@ -217,6 +218,21 @@ def removeSubstr(s, sub):
 	index = s.upper().find(sub.upper())
 	if index >= 0:
 		s = s[:index] + s[index+len(sub):]
+
+	return s
+
+def fixRomanNumerals(s):
+	if len(s) < 3:
+		return s
+
+	if s[-1] == "i":
+		if s.endswith(" Ii"):
+			s = s[:-1] + "I"
+		elif s.endswith(" Iii"):
+			s = s[:-2] + "II"
+	elif s[-1] == "v":
+		if s.endswith(" Iv"):
+			s = s[:-1] + "V"
 
 	return s
 
@@ -236,6 +252,7 @@ def massage_users():
 			user["name"] = titleCase(user["name"])
 			user["city"] = titleCase(user["city"])
 			user["state"] = titleCase(user["state"])
+			user["nick"] = titleCase(user["nick"])
 			user["country"] = titleCase(user["country"])
 
 		if options["RemoveMatchingNick"]:
@@ -274,16 +291,51 @@ def massage_users():
 			if s.endswith(" (B,"):
 				user["city"] = s[:-len(" (B")]
 
+		if options["FixRomanNumerals"]:
+			user["name"] = fixRomanNumerals(user["name"])
+
 		for key, val in user.iteritems():
 			user[key] = cleanup_blanks(val)
 
 		users[dmr_id] = user
 
-def read_user_line(line):
-	if "," not in line:
-		return
+def read_user_line(file, i, line):
+	if i == 1 and "," not in line:
+		try:
+			int(line)
+			return
+		except ValueError:
+			pass
+
 	line = line.strip("\n")
-	dmr_id, call, name, city, state, nick, country = line.split(",")
+
+	if line == "":
+		print("{0}:{1} Empty line.".format(file.name, i),
+			file=sys.stderr)
+		return
+
+	fields = line.split(",")
+
+	try:
+		int(fields[0])
+	except ValueError:
+		print("{0}:{1} non-numeric first value (DMR ID): {2}".format(
+			file.name, i, line), file=sys.stderr)
+		return
+
+	if len(fields) != 7:
+		if len(fields) < 7:
+			err = "{0}:{1} too few values ({2}): {3}".format(
+				file.name, i, len(fields), line)
+			fields += ["", "", "", "", "", "", ""]
+		else:
+			err = "{0}:{1} too many values ({2}): {3}".format(
+				file.name, i, len(fields), line)
+
+		fields = fields[:7]
+		print(err, file=sys.stderr)
+
+	dmr_id, call, name, city, state, nick, country = fields
 
 	new_user = {
 		"call": call,
@@ -336,8 +388,10 @@ def process_args():
 
 def read_user_files(files):
 	for file in files:
+		i = 1
 		for line in file:
-			read_user_line(line)
+			read_user_line(file, i, line)
+			i += 1
 
 def output_users():
 	for i, u in sorted([(int(i), u) for i, u in users.iteritems()]):
