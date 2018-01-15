@@ -11,19 +11,19 @@
 # Author: Dale Farnsworth dale@farnsworth.org
 
 # MIT License
-# 
+#
 # Copyright 2018 Dale Farnsworth
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -212,7 +212,7 @@ def titleCase(s):
 			if char not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
 				all_upper = False
 				break
-				
+
 		if all_upper:
 			fields[i] = field.capitalize()
 
@@ -333,17 +333,17 @@ def read_user_line(file, i, line):
 	try:
 		int(fields[0])
 	except ValueError:
-		print("{0}:{1} non-numeric first value (DMR ID): {2}".format(
+		print("{0}:{1} Non-numeric first value (DMR ID): {2}".format(
 			file.name, i, line), file=sys.stderr)
 		return
 
 	if len(fields) != 7:
 		if len(fields) < 7:
-			err = "{0}:{1} too few values ({2}): {3}".format(
+			err = "{0}:{1} Too few values ({2}): {3}".format(
 				file.name, i, len(fields), line)
 			fields += ["", "", "", "", "", "", ""]
 		else:
-			err = "{0}:{1} too many values ({2}): {3}".format(
+			err = "{0}:{1} Too many values ({2}): {3}".format(
 				file.name, i, len(fields), line)
 
 		fields = fields[:7]
