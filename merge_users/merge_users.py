@@ -278,11 +278,6 @@ def massage_users():
 			user["name"] = ""
 			user["nick"] = ""
 
-		if options["AbbrevStandard"]:
-			abbrev = standardAbbrevs.get(user["country"], "")
-			if abbrev != "":
-				user["country"] = abbrev
-
 		if options["AbbrevCountries"]:
 			abbrev = countryAbbrevs.get(user["country"], "")
 			if abbrev != "":
