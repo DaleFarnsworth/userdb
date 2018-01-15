@@ -373,7 +373,7 @@ def read_user_line(file, i, line):
 	user = users.get(dmr_id, blank_user)
 
 	for key, val in new_user.iteritems():
-		if user[key] == "":
+		if val != "":
 			user[key] = val
 
 	users[dmr_id] = user
