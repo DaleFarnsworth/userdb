@@ -309,10 +309,24 @@ def fixRomanNumerals(field):
 
 	return field
 
+# Return True for United States call signs.
+def US_Call(user):
+	first = user["call"][0]
+	second = user["call"][1]
+	if first in "KNW":
+		return True
+
+	if first == "A" and second >= "A" and second <= "L":
+		return True
+
+	return False
+
 def fixStateCountries(user):
 	for country, abbrevStates in stateAbbrevsByCountry.iteritems():
 		for state in abbrevStates:
 			if user["country"] == state:
+				if state == "Georgia" and not US_Call(user):
+					continue
 				if user["state"] == "":
 					user["state"] = state
 				user["country"] = country
