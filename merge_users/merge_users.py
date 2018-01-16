@@ -47,6 +47,7 @@ options = {
 	"TitleCase":		True,
 	"RemoveCallFromNick":	True,
 	"FixRomanNumerals":	True,
+	"FixStateCountries":	True,
 
 	"AbbrevCountries":	False,
 	"AbbrevDirections":	False,
@@ -95,68 +96,72 @@ countryAbbrevs = {
 	"United States":	"US",
 }
 
-stateAbbrevs = {
-	"Alabama":		"AL",
-	"Alaska":		"AK",
-	"Arizona":		"AZ",
-	"Arkansas":		"AR",
-	"California":		"CA",
-	"Colorado":		"CO",
-	"Connecticut":		"CT",
-	"Delaware":		"DE",
-	"Florida":		"FL",
-	"Georgia":		"GA",
-	"Hawaii":		"HI",
-	"Idaho":		"ID",
-	"Illinois":		"IL",
-	"Indiana":		"IN",
-	"Iowa":			"IA",
-	"Kansas":		"KS",
-	"Kentucky":		"KY",
-	"Louisiana":		"LA",
-	"Maine":		"ME",
-	"Maryland":		"MD",
-	"Massachusetts":	"MA",
-	"Michigan":		"MI",
-	"Minnesota":		"MN",
-	"Mississippi":		"MS",
-	"Missouri":		"MO",
-	"Montana":		"MT",
-	"Nebraska":		"NE",
-	"Nevada":		"NV",
-	"New Hampshire":	"NH",
-	"New Jersey":		"NJ",
-	"New Mexico":		"NM",
-	"New York":		"NY",
-	"North Carolina":	"NC",
-	"North Dakota":		"ND",
-	"Ohio":			"OH",
-	"Oklahoma":		"OK",
-	"Oregon":		"OR",
-	"Pennsylvania":		"PA",
-	"Rhode Island":		"RI",
-	"South Carolina":	"SC",
-	"South Dakota":		"SD",
-	"Tennessee":		"TN",
-	"Texas":		"TX",
-	"Utah":			"UT",
-	"Vermont":		"VT",
-	"Virginia":		"VA",
-	"Washington":		"WA",
-	"West Virginia":	"WV",
-	"Wisconsin":		"WI",
+stateAbbrevsByCountry = {
+	"United States": {
+		"Alabama":		"AL",
+		"Alaska":		"AK",
+		"Arizona":		"AZ",
+		"Arkansas":		"AR",
+		"California":		"CA",
+		"Colorado":		"CO",
+		"Connecticut":		"CT",
+		"Delaware":		"DE",
+		"Florida":		"FL",
+		"Georgia":		"GA",
+		"Hawaii":		"HI",
+		"Idaho":		"ID",
+		"Illinois":		"IL",
+		"Indiana":		"IN",
+		"Iowa":			"IA",
+		"Kansas":		"KS",
+		"Kentucky":		"KY",
+		"Louisiana":		"LA",
+		"Maine":		"ME",
+		"Maryland":		"MD",
+		"Massachusetts":	"MA",
+		"Michigan":		"MI",
+		"Minnesota":		"MN",
+		"Mississippi":		"MS",
+		"Missouri":		"MO",
+		"Montana":		"MT",
+		"Nebraska":		"NE",
+		"Nevada":		"NV",
+		"New Hampshire":	"NH",
+		"New Jersey":		"NJ",
+		"New Mexico":		"NM",
+		"New York":		"NY",
+		"North Carolina":	"NC",
+		"North Dakota":		"ND",
+		"Ohio":			"OH",
+		"Oklahoma":		"OK",
+		"Oregon":		"OR",
+		"Pennsylvania":		"PA",
+		"Rhode Island":		"RI",
+		"South Carolina":	"SC",
+		"South Dakota":		"SD",
+		"Tennessee":		"TN",
+		"Texas":		"TX",
+		"Utah":			"UT",
+		"Vermont":		"VT",
+		"Virginia":		"VA",
+		"Washington":		"WA",
+		"West Virginia":	"WV",
+		"Wisconsin":		"WI",
 
-	"District of Columbia": "DC",
-	"Puerto Rico":		"PR",
-
-	"British Columbia":	"BC",
-
-	"New South Wales":	"NSW",
-	"Queensland":		"QLD",
-	"South Australia":	"SA",
-	"Tasmania":		"TAS",
-	"Victoria":		"VIC",
-	"Western Australia":	"WAU",
+		"District of Columbia": "DC",
+		"Puerto Rico":		"PR",
+	},
+	"Canada": {
+		"British Columbia":	"BC",
+	},
+	"Australia": {
+		"New South Wales":	"NSW",
+		"Queensland":		"QLD",
+		"South Australia":	"SA",
+		"Tasmania":		"TAS",
+		"Victoria":		"VIC",
+		"Western Australia":	"WAU",
+	},
 }
 
 directionAbbrevs = {
@@ -250,7 +255,20 @@ def fixRomanNumerals(s):
 
 	return s
 
+def fixStateCountries(user):
+	for country, abbrevStates in stateAbbrevsByCountry.iteritems():
+		for state in abbrevStates:
+			if user["country"] == state:
+				if user["state"] == "":
+					user["state"] = state
+				user["country"] = country
+	return user
+
 def massage_users():
+	stateAbbrevs = {}
+	for _, abbrevStates in stateAbbrevsByCountry.iteritems():
+		stateAbbrevs.update(abbrevStates)
+
 	for dmr_id, user in users.iteritems():
 		# remove blanks from within callsigns
 		user["call"] = user["call"].replace(" ", "")
@@ -277,6 +295,9 @@ def massage_users():
 		if options["RemoveNames"]:
 			user["name"] = ""
 			user["nick"] = ""
+
+		if options["FixStateCountries"]:
+			user = fixStateCountries(user)
 
 		if options["AbbrevCountries"]:
 			abbrev = countryAbbrevs.get(user["country"], "")
