@@ -41,16 +41,16 @@ users = {}
 
 options = {
 	"MiscChanges":		True,
-        "RemoveDupSurnames":	True,
-        "RemoveMatchingNick":	True,
-        "RemoveRepeats":	True,
-        "TitleCase":		True,
+	"RemoveDupSurnames":	True,
+	"RemoveMatchingNick":	True,
+	"RemoveRepeats":	True,
+	"TitleCase":		True,
 	"RemoveCallFromNick":	True,
 	"FixRomanNumerals":	True,
 
-        "AbbrevCountries":	False,
-        "AbbrevDirections":	False,
-        "AbbrevStates":		False,
+	"AbbrevCountries":	False,
+	"AbbrevDirections":	False,
+	"AbbrevStates":		False,
 	"RemoveNames":		False,
 }
 
