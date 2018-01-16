@@ -174,86 +174,86 @@ directionAbbrevs = {
 enable_options = [x for x in sorted(options)]
 disable_options = ["No" + x for x in enable_options]
 
-def cleanup_blanks(s):
+def cleanup_blanks(field):
 	# remove leading and trailing blanks
-	s = s.strip()
+	field = field.strip()
 
 	# squeeze repeated blanks into a single blank
-	while "  " in s:
-		s = s.replace("  ", " ")
+	while "  " in field:
+		field = field.replace("  ", " ")
 
-	return s
+	return field
 
 # Remove duplicated surnames
-def removeDupSurnames(name):
-	names = name.split()
-	if len(names) > 2 and names[-2] == names[-1]:
-		name = " ".join(names[:-1])
+def removeDupSurnames(field):
+	words = field.split()
+	if len(words) > 2 and words[-2] == words[-1]:
+		field = " ".join(words[:-1])
 
-	return name
+	return field
 
 # if the entire field is repeated, eliminate the redundant repitition
-def removeRepeats(s):
-	fields = s.split()
-	if len(fields) < 4 or len(fields) % 2 != 0:
-		return s
+def removeRepeats(field):
+	words = field.split()
+	if len(words) < 4 or len(words) % 2 != 0:
+		return field
 
-	hlen = len(fields) / 2
+	hlen = len(words) / 2
 	for i in range(hlen):
-		if fields[i] != fields[i+hlen]:
-			return s
+		if words[i] != words[i+hlen]:
+			return field
 
-	return " ".join(fields[:hlen])
+	return " ".join(words[:hlen])
 
 # If a word is all caps, only capitalize the first letter
-def titleCase(s):
-	fields = s.split()
-	for i, field in enumerate(fields):
-		if len(field) < 4:
+def titleCase(field):
+	words = field.split()
+	for i, word in enumerate(words):
+		if len(word) < 4:
 			continue
 
 		all_upper = True
-		for char in field:
+		for char in word:
 			if char not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
 				all_upper = False
 				break
 
 		if all_upper:
-			fields[i] = field.capitalize()
+			words[i] = word.capitalize()
 
-	return " ".join(fields)
+	return " ".join(words)
 
 # Abbreviate the cardinal directions
-def abbrevDirections(s):
-	fields = s.split(" ")
+def abbrevDirections(field):
+	words = field.split(" ")
 
-	abbrev = directionAbbrevs.get(fields[0], "")
+	abbrev = directionAbbrevs.get(words[0], "")
 	if abbrev != "":
-		fields[0] = abbrev
+		words[0] = abbrev
 
-	return " ".join(fields)
+	return " ".join(words)
 
-def removeSubstr(s, sub):
-	index = s.upper().find(sub.upper())
+def removeSubstr(field, subfield):
+	index = field.upper().find(subfield.upper())
 	if index >= 0:
-		s = s[:index] + s[index+len(sub):]
+		field = field[:index] + field[index+len(subfield):]
 
-	return s
+	return field
 
-def fixRomanNumerals(s):
-	if len(s) < 3:
-		return s
+def fixRomanNumerals(field):
+	if len(field) < 3:
+		return field
 
-	if s[-1] == "i":
-		if s.endswith(" Ii"):
-			s = s[:-1] + "I"
-		elif s.endswith(" Iii"):
-			s = s[:-2] + "II"
-	elif s[-1] == "v":
-		if s.endswith(" Iv"):
-			s = s[:-1] + "V"
+	if field[-1] == "i":
+		if field.endswith(" Ii"):
+			field = field[:-1] + "I"
+		elif field.endswith(" Iii"):
+			field = field[:-2] + "II"
+	elif field[-1] == "v":
+		if field.endswith(" Iv"):
+			field = field[:-1] + "V"
 
-	return s
+	return field
 
 def fixStateCountries(user):
 	for country, abbrevStates in stateAbbrevsByCountry.iteritems():
@@ -317,9 +317,9 @@ def massage_users():
 			user["nick"] = removeSubstr(user["nick"], user["call"])
 
 		if options["MiscChanges"]:
-			s = user["city"]
-			if s.endswith(" (B,"):
-				user["city"] = s[:-len(" (B")]
+			field = user["city"]
+			if field.endswith(" (B,"):
+				user["city"] = field[:-len(" (B")]
 
 		if options["FixRomanNumerals"]:
 			user["name"] = fixRomanNumerals(user["name"])
