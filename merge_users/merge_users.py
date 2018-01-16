@@ -378,20 +378,29 @@ def process_args():
 	parser.add_argument("-o", nargs=1, dest="options",
 		action="append", choices=enable_options + disable_options)
 
+	parser.add_argument("--verbatim", nargs=1, dest="verbatim",
+		action="append", type=argparse.FileType("r"),
+		help="a filename to be merged without modification")
+
 	parser.add_argument("files", metavar="filename", nargs="*",
 		type=argparse.FileType("r"), help="a filename to be merged")
 
 	args = parser.parse_args()
 
-	if args.options == None:
-		return args
+	if args.options != None:
+		for opts in args.options:
+			for opt in opts:
+				if opt in enable_options:
+					options[opt] = True
+				elif opt in disable_options:
+					options[opt[2:]] = False
 
-	for opt in args.options:
-		for opt in opt:
-			if opt in enable_options:
-				options[opt] = True
-			elif opt in disable_options:
-				options[opt[2:]] = False
+	verbatim = []
+	if args.verbatim != None:
+		for files in args.verbatim:
+			verbatim += files
+	args.verbatim = verbatim
+
 
 	return args
 
@@ -414,6 +423,7 @@ def main():
 	args = process_args()
 	read_user_files(args.files)
 	massage_users()
+	read_user_files(args.verbatim)
 	output_users()
 
 if __name__ == '__main__':
