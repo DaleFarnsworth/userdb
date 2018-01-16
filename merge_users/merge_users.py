@@ -92,7 +92,7 @@ countryAbbrevs = {
 	"India":			"IN",
 	"Indonesia":			"ID",
 	"Ireland":			"IE",
-	"Israel":			"IS",
+	"Israel":			"IL",
 	"Italy":			"IT",
 	"Japan":			"JP",
 	"Korea":			"KR",
