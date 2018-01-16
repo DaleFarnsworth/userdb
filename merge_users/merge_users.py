@@ -249,7 +249,7 @@ def removeRepeats(s):
 
 # If a word is all caps, only capitalize the first letter
 def titleCase(s):
-	fields = s.split(",")
+	fields = s.split()
 	for i, field in enumerate(fields):
 		if len(field) < 4:
 			continue
