@@ -255,16 +255,23 @@ stateAbbrevsByCountry = {
 		"Zuid-Holland":			"ZH",
 	},
 	"Belgium": {
+		"Antwerpen":			"VAN",
 		"Antwerp":			"VAN",
 		"East Flanders":		"VOV",
 		"Flemish Brabant":		"VBR",
 		"Hainaut":			"WHT",
+		"Henegouwen":			"WHT",
+		"Ile-de-France":		"IF",
+		"le-de-France":			"IF",
 		"Liege":			"WLG",
 		"Limburg":			"VLI",
 		"Luxembourg":			"WLX",
+		"Namen":			"WNA",
 		"Namur":			"WNA",
+		"Vlaams-Brabant":		"VBR",
 		"Walloon Brabant":		"WBR",
 		"West Flanders":		"VWV",
+		"West-Vlaanderen":		"VWV",
 	},
 }
 
