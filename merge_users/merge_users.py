@@ -2095,7 +2095,11 @@ def read_user_line(file, i, line):
 	fields = line.split(",")
 
 	try:
-		int(fields[0])
+		dmr_id = int(fields[0])
+		if dmr_id > 16777215:
+			print("{0}:{1} Invalid DMR ID value: {2}".format(
+				file.name, i, line), file=sys.stderr)
+			return
 	except ValueError:
 		print("{0}:{1} Non-numeric first value (DMR ID): {2}".format(
 			file.name, i, line), file=sys.stderr)
