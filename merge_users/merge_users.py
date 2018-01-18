@@ -37,6 +37,8 @@ from __future__ import print_function
 import sys
 import argparse
 
+version = "0.5.0"
+
 users = {}
 
 options = {
@@ -2215,6 +2217,9 @@ def process_args():
 	parser.add_argument("files", metavar="filename", nargs="*",
 		type=argparse.FileType("r"), help="a filename to be merged")
 
+	parser.add_argument("--version", help="output the current version",
+		action="store_true")
+
 	args = parser.parse_args()
 
 	if args.options != None:
@@ -2231,6 +2236,9 @@ def process_args():
 			verbatim += files
 	args.verbatim = verbatim
 
+	if args.version:
+		print(version)
+		sys.exit(0)
 
 	return args
 
