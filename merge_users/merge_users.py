@@ -2208,6 +2208,7 @@ def process_args():
 		action="append", choices=enable_options + disable_options)
 
 	parser.add_argument("--verbatim", nargs=1, dest="verbatim",
+		metavar="filename",
 		action="append", type=argparse.FileType("r"),
 		help="a filename to be merged without modification")
 
