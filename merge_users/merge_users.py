@@ -2252,11 +2252,18 @@ def read_user_files(files):
 			i += 1
 
 def output_users():
+	byteCount = 0
+	lines = [""]
 	for i, u in sorted([(int(i), u) for i, u in users.iteritems()]):
 		line = "{0},{1},{2},{3},{4},{5},{6}".format(
 			u["id"], u["call"], u["name"], u["city"], u["state"],
 			u["nick"], u["country"])
 
+		byteCount += len(line) + 1
+		lines.append(line)
+
+	lines[0] = str(byteCount)
+	for line in lines:
 		print(line)
 
 def main():
