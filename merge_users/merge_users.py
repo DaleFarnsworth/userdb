@@ -37,6 +37,8 @@ from __future__ import print_function
 import sys
 import argparse
 
+version = "0.5.0"
+
 users = {}
 
 options = {
@@ -57,88 +59,6 @@ options = {
 }
 
 countryAbbrevs = {
-<<<<<<< HEAD
-	"Andorra":		"AD",
-	"Argentina Republic":		"AR",
-	"Australia":		"AU",
-	"Austria":		"AT",
-	"Barbados":		"BB",
-	"Belgium":		"BE",
-	"Belize":		"BZ",
-	"Brazil":		"BR",
-	"Bosnia and Hercegovina": "BA",
-	"Bosnia and Hercegovi": "BA",
-	"Bulgaria":		"BG",
-	"Canada":		"CA",
-	"China":		"CN",
-	"Chile":		"CL",
-	"Colombia":		"CO",
-	"Costa Rica":		"CR",
-	"Croatia":		"HR",
-	"Cyprus":		"CY",
-	"Czech Republic":	"CZ",
-	"Denmark":		"DK",
-	"Dominica":		"DM",
-	"Dominican Republic":	"DO",
-	"Ecuador":		"EC",
-	"Estonia":		"EE",
-	"France":		"FR",
-	"Finland":		"FI",
-	"Germany":		"DE",
-	"Greece":		"GR",
-	"Guatemala":		"GT",
-	"Haiti":		"HT",
-	"Hungary":		"HU",
-	"Hong Kong":		"HK",
-	"India":		"IN",
-	"Indonesia":	"ID",
-	"Italy":		"IT",
-	"Ireland":		"IE",
-	"Israel":		"IS",
-	"Japan":		"JP",
-	"Korea":		"SKR",
-	"Korea S":		"SKR",
-	"Kuwait":		"KW",
-	"Latvia":		"LV",
-	"Liechtenstein":		"LI",
-	"Luxembourg":		"LU",
-	"Luxemburg":		"LU",
-	"Macedonia":		"MK",
-	"Malta":		"MT",
-	"Malaysia":		"MY",
-	"Mexico":		"MX",
-	"Montenegro":		"ME",
-	"Netherlands":		"NL",
-	"Netherlands Antilles":		"AN",
-	"New Zealand":		"NZ",
-	"Norway":		"NO",
-	"Philippines":		"PH",
-	"Panama":		"PA",
-	"Paraguay":		"PY",
-	"Poland":		"PL",
-	"Portugal":		"PT",
-	"Qatar":		"QA",
-	"Reunion":		"RE",
-	"Romania":		"ROU",
-	"Russia":		"RU",
-	"Serbia":		"RS",
-	"Singapore":		"SG",
-	"Slovakia":		"SK",
-	"Slovenia":		"SI",
-	"Spain":		"ES",
-	"Sweden":		"SE",
-	"Switzerland":		"CH",
-	"South Africa":		"ZA",
-	"Taiwan":		"TW",
-	"Thailand":		"TH",
-	"Trinidad and Tobago":		"TT",
-	"Turkey":		"TR",
-	"Ukraine":		"UA",
-	"United Kingdom":	"UK",
-	"United States":	"US",
-	"Uruguay":		"UY",
-	"Venezuela":		"VE",
-=======
 	"Andorra":			"AD",
 	"Argentina":			"AR",
 	"Argentina Republic":		"AR",
@@ -220,7 +140,6 @@ countryAbbrevs = {
 	"United States":		"US",
 	"Uruguay":			"UY",
 	"Venezuela":			"VE",
->>>>>>> refs/remotes/DaleFarnsworth/master
 }
 
 stateAbbrevsByCountry = {
@@ -338,65 +257,23 @@ stateAbbrevsByCountry = {
 		"Zuid-Holland":			"ZH",
 	},
 	"Belgium": {
+		"Antwerpen":			"VAN",
 		"Antwerp":			"VAN",
 		"East Flanders":		"VOV",
 		"Flemish Brabant":		"VBR",
 		"Hainaut":			"WHT",
+		"Henegouwen":			"WHT",
+		"Ile-de-France":		"IF",
+		"le-de-France":			"IF",
 		"Liege":			"WLG",
 		"Limburg":			"VLI",
 		"Luxembourg":			"WLX",
+		"Namen":			"WNA",
 		"Namur":			"WNA",
+		"Vlaams-Brabant":		"VBR",
 		"Walloon Brabant":		"WBR",
 		"West Flanders":		"VWV",
-	},
-		"Germany": {
-		"Baden-Wuerttemberg":		"BW",
-		"Baden-Wurttemberg":		"BW",
-		"Bavaria":		"BY",
-		"Brandenburg":	"BB",
-		"Berlin":		"BE",
-		"Bremen":		"HB",
-		"Hamburg":		"HH",
-		"Hessen":		"HE",
-		"Lower Saxony":		"NI",
-		"Mecklenburg-Vorpommern":		"MV",
-		"North Rhine-Westphalia":		"NW",
-		"Rhineland-Palatinate":		"RP",
-		"Saarland":		"SL",
-		"Saxony":		"SN",
-		"Saxony-Anhalt":		"ST",
-		"Schleswig-Holstein":		"SH",
-		"Thuringia":		"TH",
-	},
-	"Netherlands": {
-		"Drenthe":		"DR",
-		"Flevoland":		"FD",
-		"Friesland":		"FR",
-		"Gelderland":		"GE",
-		"Groningen":		"GR",
-		"Limburg":		"LI",
-		"Noord-Holland":		"N-H",
-		"Noord-Brabant":		"N-B",
-		"North Brabant":		"N-B",
-		"North Holland":		"N-H",
-		"Oost-Vlaanderen":		"O-V",
-		"Overijssel":		"OV",
-		"South Holland":		"ZH",
-		"Utrecht":		"UTR",
-		"Zeeland":		"ZE",
-		"Zuid-Holland":		"ZH",
-	},
-	"Belgium": {
-		"Antwerp":		"VAN",
-		"East Flanders":		"VOV",
-		"Flemish Brabant":		"VBR",
-		"Hainaut":		"WHT",
-		"Liege":		"WLG",
-		"Limburg":		"VLI",
-		"Luxembourg":		"WLX",
-		"Namur":		"WNA",
-		"Walloon Brabant":		"WBR",
-		"West Flanders":		"VWV",
+		"West-Vlaanderen":		"VWV",
 	},
 }
 
@@ -2333,11 +2210,15 @@ def process_args():
 		action="append", choices=enable_options + disable_options)
 
 	parser.add_argument("--verbatim", nargs=1, dest="verbatim",
+		metavar="filename",
 		action="append", type=argparse.FileType("r"),
 		help="a filename to be merged without modification")
 
 	parser.add_argument("files", metavar="filename", nargs="*",
 		type=argparse.FileType("r"), help="a filename to be merged")
+
+	parser.add_argument("--version", help="output the current version",
+		action="store_true")
 
 	args = parser.parse_args()
 
@@ -2355,6 +2236,9 @@ def process_args():
 			verbatim += files
 	args.verbatim = verbatim
 
+	if args.version:
+		print(version)
+		sys.exit(0)
 
 	return args
 
