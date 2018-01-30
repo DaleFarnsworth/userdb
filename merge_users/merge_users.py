@@ -42,14 +42,14 @@ version = "0.5.0"
 users = {}
 
 options = {
+	"FixRomanNumerals":	True,
+	"FixStateCountries":	True,
 	"MiscChanges":		True,
+	"RemoveCallFromNick":	True,
 	"RemoveDupSurnames":	True,
 	"RemoveMatchingNick":	True,
 	"RemoveRepeats":	True,
 	"TitleCase":		True,
-	"RemoveCallFromNick":	True,
-	"FixRomanNumerals":	True,
-	"FixStateCountries":	True,
 
 	"AbbrevCountries":	False,
 	"AbbrevDirections":	False,
@@ -2058,7 +2058,7 @@ def checkTitleCase():
 						break
 
 				if not allUpper:
-					break
+					continue
 
 				if word in titleCaseDict:
 					continue
@@ -2097,6 +2097,9 @@ def massage_users():
 			first = user["name"].split(" ", 2)[0]
 			if first == user["nick"]:
 				user["nick"] = ""
+		else:
+			if user["nick"] == "":
+				user["nick"] = user["name"].split(" ", 2)[0]
 
 		if options["RemoveNames"]:
 			user["name"] = ""
@@ -2123,9 +2126,8 @@ def massage_users():
 			user["nick"] = removeSubstr(user["nick"], user["call"])
 
 		if options["MiscChanges"]:
-			field = user["city"]
-			if field.endswith(" (B,"):
-				user["city"] = field[:-len(" (B")]
+			if user["city"].endswith(" (B,"):
+				user["city"] = user["city"][:-len(" (B")]
 
 		if options["FixRomanNumerals"]:
 			user["name"] = fixRomanNumerals(user["name"])
