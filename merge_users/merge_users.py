@@ -50,6 +50,7 @@ options = {
 	"RemoveMatchingNick":	True,
 	"RemoveRepeats":	True,
 	"TitleCase":		True,
+	"Header":		True,
 
 	"AbbrevCountries":	False,
 	"AbbrevDirections":	False,
@@ -2291,6 +2292,10 @@ def output_users():
 		lines.append(line)
 
 	lines[0] = str(byteCount)
+
+	if not options["Header"]:
+		lines = lines[1:]
+
 	for line in lines:
 		print(line)
 
