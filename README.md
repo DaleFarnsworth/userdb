@@ -12,6 +12,7 @@ Optionally, several other fixups are performed.  See the options early
 in the source for merge_users.py
 
 Examples:
+
 	merge_users.py -o AbbrevCountries -o AbbrevStates myusers.csv marc.csv
 
 	merge_users.py myusers.csv marc.csv --verbatim override.csv
