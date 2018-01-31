@@ -56,6 +56,8 @@ options = {
 	"AbbrevStates":		False,
 	"CheckTitleCase":	False,
 	"RemoveNames":		False,
+	"UpperCaseStates":	False,
+	"UpperCaseCountries":	False,
 }
 
 countryAbbrevs = {
@@ -2137,6 +2139,9 @@ def massage_users():
 			if country != "":
 				user["country"] = country
 
+		if options["UpperCaseCountries"]:
+			user["country"] = user["country"].upper()
+			
 		if options["AbbrevStates"]:
 			abbrev = stateAbbrevs.get(user["state"], "")
 			if abbrev != "":
@@ -2146,6 +2151,9 @@ def massage_users():
 			if state != "":
 				user["state"] = state
 
+		if options["UpperCaseStates"]:
+			user["state"] = user["state"].upper()
+			
 		if options["AbbrevDirections"]:
 			user["city"] = abbrevDirections(user["city"])
 			user["state"] = abbrevDirections(user["state"])
