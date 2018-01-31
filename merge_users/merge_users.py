@@ -2075,6 +2075,14 @@ def massage_users():
 	for _, abbrevStates in stateAbbrevsByCountry.iteritems():
 		stateAbbrevs.update(abbrevStates)
 
+	stateAbbrevsInverse = {}
+	for state, abbrev in stateAbbrevs.iteritems():
+		stateAbbrevsInverse[abbrev] = state
+
+	countryAbbrevsInverse = {}
+	for country, abbrev in countryAbbrevs.iteritems():
+		countryAbbrevsInverse[abbrev] = country
+
 	for dmr_id, user in users.iteritems():
 		# remove blanks from within callsigns
 		user["call"] = user["call"].replace(" ", "")
@@ -2112,11 +2120,19 @@ def massage_users():
 			abbrev = countryAbbrevs.get(user["country"], "")
 			if abbrev != "":
 				user["country"] = abbrev
+		else:
+			country = countryAbbrevsInverse.get(user["country"], "")
+			if country != "":
+				user["country"] = country
 
 		if options["AbbrevStates"]:
 			abbrev = stateAbbrevs.get(user["state"], "")
 			if abbrev != "":
 				user["state"] = abbrev
+		else:
+			state = stateAbbrevsInverse.get(user["state"], "")
+			if state != "":
+				user["state"] = state
 
 		if options["AbbrevDirections"]:
 			user["city"] = abbrevDirections(user["city"])
