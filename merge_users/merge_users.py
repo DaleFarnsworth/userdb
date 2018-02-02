@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 # This program takes a list of userdb files and merges them together.
-# Fields for each DMR ID found in earlier files take precedence.
+# Fields for each DMR ID found in later files take precedence.
 # In other words, as each file is processed, a field for a DMR ID is
-# updated only if that field has not been set by a previous file.
+# updated if that field is non-empty. Non-empty fields always replace
+# fields from previously-processed files.  An empty field never replaces
+# an existing field.
 
 # Optionally, several other fixups are performed.  See the options below.
 
