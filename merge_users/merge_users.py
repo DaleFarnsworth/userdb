@@ -2091,8 +2091,9 @@ def massage_users():
 		countryAbbrevsUpper[abbrev.upper()] = abbrev
 
 	for dmr_id, user in users.iteritems():
-		# remove blanks from within callsigns
-		user["call"] = user["call"].replace(" ", "")
+		# remove blanks from within callsigns for ids >= 1000000
+		if int(dmr_id) >= 1000000:
+			user["call"] = user["call"].replace(" ", "")
 
 		if options["RemoveDupSurnames"]:
 			user["name"] = removeDupSurnames(user["name"])
