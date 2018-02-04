@@ -39,7 +39,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-version = "0.5.2"
+version = "0.5.3"
 
 users = {}
 
