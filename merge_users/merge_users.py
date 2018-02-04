@@ -2231,11 +2231,14 @@ def read_user_line(file, i, line):
 
 	user = users.get(dmr_id, blank_user)
 
+	changed = False
 	for key, val in new_user.iteritems():
 		if val != "":
 			user[key] = val
+			changed = True
 
-	users[dmr_id] = user
+	if changed:
+		users[dmr_id] = user
 
 def process_args():
 	parser = argparse.ArgumentParser(description="Merge userdb files")
