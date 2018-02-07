@@ -39,7 +39,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-version = "0.5.3"
+version = "0.5.4"
 
 users = {}
 
@@ -233,11 +233,13 @@ stateAbbrevsByCountry = {
 		"Hessen":			"HE",
 		"Lower Saxony":			"NI",
 		"Mecklenburg-Vorpommern":	"MV",
+		"Nordrhein-Westfalen":		"NW",
 		"North Rhine-Westphalia":	"NW",
+		"Rheinland-Pfalz":		"RP",
 		"Rhineland-Palatinate":		"RP",
 		"Saarland":			"SL",
-		"Saxony-Anhalt":		"ST",
 		"Saxony":			"SN",
+		"Saxony-Anhalt":		"ST",
 		"Schleswig-Holstein":		"SH",
 		"Thuringia":			"TH",
 	},
