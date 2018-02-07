@@ -39,7 +39,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-version = "0.5.4"
+version = "0.5.5"
 
 users = {}
 
@@ -1950,6 +1950,14 @@ disable_options = ["No" + x for x in enable_options]
 
 titleCaseDict = {word : word.capitalize() for word in titleCaseWords}
 
+stateAbbrevs = {}
+stateAbbrevsInverse = {}
+stateAbbrevsUpper = {}
+countryAbbrevsInverse = {}
+countryAbbrevsUpper = {}
+excludedIDRanges = []
+excludedCountries = []
+
 def cleanup_blanks(field):
 	# remove leading and trailing blanks
 	field = field.strip()
@@ -2076,18 +2084,13 @@ def checkTitleCase():
 	print("end of new upper-case words")
 
 def massage_users():
-	stateAbbrevs = {}
 	for _, abbrevStates in stateAbbrevsByCountry.iteritems():
 		stateAbbrevs.update(abbrevStates)
 
-	stateAbbrevsInverse = {}
-	stateAbbrevsUpper = {}
 	for state, abbrev in stateAbbrevs.iteritems():
 		stateAbbrevsInverse[abbrev] = state
 		stateAbbrevsUpper[abbrev.upper()] = abbrev
 
-	countryAbbrevsInverse = {}
-	countryAbbrevsUpper = {}
 	for country, abbrev in countryAbbrevs.iteritems():
 		countryAbbrevsInverse[abbrev] = country
 		countryAbbrevsUpper[abbrev.upper()] = abbrev
@@ -2259,6 +2262,12 @@ def process_args():
 	parser.add_argument("--version", help="output the current version",
 		action="store_true")
 
+	parser.add_argument("--excludeID", nargs=1, action="append",
+		metavar="id[-id]", dest="excludedIDRange")
+
+	parser.add_argument("--excludeCountry", nargs=1, action="append",
+		metavar="country", dest="excludedCountry")
+
 	args = parser.parse_args()
 
 	if args.options != None:
@@ -2274,6 +2283,39 @@ def process_args():
 		for files in args.verbatim:
 			verbatim += files
 	args.verbatim = verbatim
+
+	errors = 0
+	if args.excludedIDRange != None:
+		for idRange in args.excludedIDRange:
+			idRange = idRange[0]
+			ids = idRange.split("-", 2)
+			if len(ids) == 1:
+				ids = [ids[0], ids[0]]
+			try:
+				ids = [int(ids[0]), int(ids[1])]
+			except ValueError:
+				print("Bad IDRange {0}".format(idRange),
+					file=sys.stderr)
+				errors += 1
+				continue
+
+			excludedIDRanges.append(ids)
+
+	if errors > 0:
+		sys.exit(1)
+
+	countryMap = {}
+	if args.excludedCountry != None:
+		for country in args.excludedCountry:
+			country = country[0]
+			countryMap[country] = True
+			abbrev = countryAbbrevs.get(country, "")
+			if abbrev != "":
+				countryMap[abbrev] = True
+			abbrev = countryAbbrevsInverse.get(country, "")
+			if abbrev != "":
+				countryMap[abbrev] = True
+	excludedCountries.extend(countryMap.keys())
 
 	if args.version:
 		print(version)
@@ -2292,6 +2334,16 @@ def output_users():
 	byteCount = 0
 	lines = [""]
 	for i, u in sorted([(int(i), u) for i, u in users.iteritems()]):
+		excludedID = False
+		for idRange in excludedIDRanges:
+			if i >= idRange[0] and i <= idRange[1]:
+				excludedID = True
+		if excludedID:
+			continue
+
+		if u["country"] in excludedCountries:
+			continue
+
 		line = "{0},{1},{2},{3},{4},{5},{6}".format(
 			u["id"], u["call"], u["name"], u["city"], u["state"],
 			u["nick"], u["country"])
