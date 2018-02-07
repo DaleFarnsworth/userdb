@@ -39,7 +39,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-version = "0.5.5"
+version = "0.5.6"
 
 users = {}
 
@@ -2084,17 +2084,6 @@ def checkTitleCase():
 	print("end of new upper-case words")
 
 def massage_users():
-	for _, abbrevStates in stateAbbrevsByCountry.iteritems():
-		stateAbbrevs.update(abbrevStates)
-
-	for state, abbrev in stateAbbrevs.iteritems():
-		stateAbbrevsInverse[abbrev] = state
-		stateAbbrevsUpper[abbrev.upper()] = abbrev
-
-	for country, abbrev in countryAbbrevs.iteritems():
-		countryAbbrevsInverse[abbrev] = country
-		countryAbbrevsUpper[abbrev.upper()] = abbrev
-
 	for dmr_id, user in users.iteritems():
 		# remove blanks from within callsigns for ids >= 1000000
 		if int(dmr_id) >= 1000000:
@@ -2138,20 +2127,20 @@ def massage_users():
 			user["state"] = abbrev
 
 		if options["AbbrevCountries"]:
-			abbrev = countryAbbrevs.get(user["country"], "")
+			abbrev = countryAbbrevs.get(user["country"].upper(), "")
 			if abbrev != "":
 				user["country"] = abbrev
 		else:
-			country = countryAbbrevsInverse.get(user["country"], "")
+			country = countryAbbrevsInverse.get(user["country"].upper(), "")
 			if country != "":
 				user["country"] = country
 
 		if options["AbbrevStates"]:
-			abbrev = stateAbbrevs.get(user["state"], "")
+			abbrev = stateAbbrevs.get(user["state"].upper(), "")
 			if abbrev != "":
 				user["state"] = abbrev
 		else:
-			state = stateAbbrevsInverse.get(user["state"], "")
+			state = stateAbbrevsInverse.get(user["state"].upper(), "")
 			if state != "":
 				user["state"] = state
 
@@ -2284,6 +2273,19 @@ def process_args():
 			verbatim += files
 	args.verbatim = verbatim
 
+	for _, abbrevStates in stateAbbrevsByCountry.iteritems():
+		stateAbbrevs.update(abbrevStates)
+
+	for state, abbrev in stateAbbrevs.items():
+		stateAbbrevs[state.upper()] = abbrev
+		stateAbbrevsInverse[abbrev.upper()] = state
+		stateAbbrevsUpper[abbrev.upper()] = abbrev
+
+	for country, abbrev in countryAbbrevs.items():
+		countryAbbrevs[country.upper()] = abbrev
+		countryAbbrevsInverse[abbrev.upper()] = country
+		countryAbbrevsUpper[abbrev.upper()] = abbrev
+
 	errors = 0
 	if args.excludedIDRange != None:
 		for idRange in args.excludedIDRange:
@@ -2307,14 +2309,14 @@ def process_args():
 	countryMap = {}
 	if args.excludedCountry != None:
 		for country in args.excludedCountry:
-			country = country[0]
+			country = country[0].upper()
 			countryMap[country] = True
 			abbrev = countryAbbrevs.get(country, "")
 			if abbrev != "":
-				countryMap[abbrev] = True
+				countryMap[abbrev.upper()] = True
 			abbrev = countryAbbrevsInverse.get(country, "")
 			if abbrev != "":
-				countryMap[abbrev] = True
+				countryMap[abbrev.upper()] = True
 	excludedCountries.extend(countryMap.keys())
 
 	if args.version:
@@ -2341,7 +2343,7 @@ def output_users():
 		if excludedID:
 			continue
 
-		if u["country"] in excludedCountries:
+		if u["country"].upper() in excludedCountries:
 			continue
 
 		line = "{0},{1},{2},{3},{4},{5},{6}".format(
