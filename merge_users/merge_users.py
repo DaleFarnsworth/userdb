@@ -44,6 +44,21 @@ version = "1.0.0"
 
 optionList = [
 	dict(
+		name = "abbrevCountries",
+		default = True,
+		help = "Abbreviate country names.",
+	),
+	dict(
+		name = "abbrevDirections",
+		default = True,
+		help = "Abbreviate directions.",
+	),
+	dict(
+		name = "abbrevStates",
+		default = True,
+		help = "Abbreviate state and province names.",
+	),
+	dict(
 		name = "fixRomanNumerals",
 		default = True,
 		help = "Fix case on roman numerals. Changes mixed-case " +
@@ -98,21 +113,6 @@ optionList = [
 			"remaining bytes in the file.",
 	),
 
-	dict(
-		name = "abbrevCountries",
-		default = False,
-		help = "Abbreviate country names.",
-	),
-	dict(
-		name = "abbrevDirections",
-		default = False,
-		help = "Abbreviate directions.",
-	),
-	dict(
-		name = "abbrevStates",
-		default = False,
-		help = "Abbreviate state and province names.",
-	),
 	dict(
 		name = "removeNames",
 		default = False,
