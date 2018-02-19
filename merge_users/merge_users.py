@@ -40,7 +40,7 @@ import sys
 import argparse
 import shlex
 
-version = "1.0.0"
+version = "1.0.1"
 
 optionList = [
 	dict(
@@ -2466,11 +2466,19 @@ def read_user_line(file, i, line):
 		if country.upper() in excludedCountries[file.name]:
 			return
 
+	if "*" in excludedCountries:
+		if country.upper() in excludedCountries["*"]:
+			return
+
 	includedCountry = True
-	if file.name in includedCountries:
+	if file.name in includedCountries or "*" in includedCountries:
 		includedCountry = False
-		if country.upper() in includedCountries[file.name]:
-			includedCountry = True
+		if file.name in includedCountries:
+			if country.upper() in includedCountries[file.name]:
+				includedCountry = True
+		if "*" in includedCountries:
+			if country.upper() in includedCountries["*"]:
+				includedCountry = True
 	if not includedCountry:
 		return
 
@@ -2479,15 +2487,24 @@ def read_user_line(file, i, line):
 		for idRange in excludedIDRanges[file.name]:
 			if i_dmr_id >= idRange[0] and i_dmr_id <= idRange[1]:
 				excludedID = True
+	if "*" in excludedIDRanges:
+		for idRange in excludedIDRanges["*"]:
+			if i_dmr_id >= idRange[0] and i_dmr_id <= idRange[1]:
+				excludedID = True
 	if excludedID:
 		return
 
 	includedID = True
-	if file.name in includedIDRanges:
+	if file.name in includedIDRanges or "*" in includedIDRanges:
 		includedID = False
-		for idRange in includedIDRanges[file.name]:
-			if i_dmr_id >= idRange[0] and i_dmr_id <= idRange[1]:
-				includedID = True
+		if file.name in includedIDRanges:
+			for idRange in includedIDRanges[file.name]:
+				if i_dmr_id >= idRange[0] and i_dmr_id <= idRange[1]:
+					includedID = True
+		if "*" in includedIDRanges:
+			for idRange in includedIDRanges[file.name]:
+				if i_dmr_id >= idRange[0] and i_dmr_id <= idRange[1]:
+					includedID = True
 	if not includedID:
 		return
 
@@ -2522,6 +2539,14 @@ def read_user_line(file, i, line):
 		users[dmr_id] = user
 
 def excludeIDRanges(filename, idRanges, errPrefix):
+	if filename != "*":
+		try:
+			file = open(filename, "r")
+			file.close()
+		except IOError as err:
+			errors.append(errPrefix + str(err))
+			return
+
 	for idRange in idRanges:
 		ids = idRange.split("-", 2)
 		if len(ids) == 1:
@@ -2540,6 +2565,14 @@ def excludeIDRanges(filename, idRanges, errPrefix):
 		excludedIDRanges[filename].append(ids)
 
 def includeIDRanges(filename, idRanges, errPrefix):
+	if filename != "*":
+		try:
+			file = open(filename, "r")
+			file.close()
+		except IOError as err:
+			errors.append(errPrefix + str(err))
+			return
+
 	for idRange in idRanges:
 		ids = idRange.split("-", 2)
 		if len(ids) == 1:
@@ -2557,7 +2590,15 @@ def includeIDRanges(filename, idRanges, errPrefix):
 
 		includedIDRanges[filename].append(ids)
 
-def excludeCountries(filename, countries):
+def excludeCountries(filename, countries, errPrefix):
+	if filename != "*":
+		try:
+			file = open(filename, "r")
+			file.close()
+		except IOError as err:
+			errors.append(errPrefix + str(err))
+			return
+
 	countryMap = {}
 	for country in countries:
 		country = country.upper()
@@ -2575,7 +2616,15 @@ def excludeCountries(filename, countries):
 
 	excludedCountries[filename].extend(countryMap.keys())
 
-def includeCountries(filename, countries):
+def includeCountries(filename, countries, errPrefix):
+	if filename != "*":
+		try:
+			file = open(filename, "r")
+			file.close()
+		except IOError as err:
+			errors.append(errPrefix + str(err))
+			return
+
 	countryMap = {}
 	for country in countries:
 		country = country.upper()
@@ -2644,45 +2693,25 @@ def parseConfigLine(configFile, i, line):
 	if cmd == "excludeid" or cmd == "excludeids":
 		filename = args[0]
 		idRanges = args[1:]
-		try:
-			file = open(filename, "r")
-			file.close()
-			excludeIDRanges(filename, idRanges, errPrefix)
-		except IOError as err:
-			errors.append(errPrefix + str(err))
+		excludeIDRanges(filename, idRanges, errPrefix)
 		return
 
 	if cmd == "includeid" or cmd == "includeids":
 		filename = args[0]
 		idRanges = args[1:]
-		try:
-			file = open(filename, "r")
-			file.close()
-			includeIDRanges(filename, idRanges, errPrefix)
-		except IOError as err:
-			errors.append(errPrefix + str(err))
+		includeIDRanges(filename, idRanges, errPrefix)
 		return
 
 	if cmd == "excludecountry" or cmd == "excludecountries":
 		filename = args[0]
 		countries = args[1:]
-		try:
-			file = open(filename, "r")
-			file.close()
-			excludeCountries(filename, countries)
-		except IOError as err:
-			errors.append(errPrefix + str(err))
+		excludeCountries(filename, countries, errPrefix)
 		return
 
 	if cmd == "includecountry" or cmd == "includecountries":
 		filename = args[0]
 		countries = args[1:]
-		try:
-			file = open(filename, "r")
-			file.close()
-			includeCountries(filename, countries)
-		except IOError as err:
-			errors.append(errPrefix + str(err))
+		includeCountries(filename, countries, errPrefix)
 		return
 
 	errors.append(errPrefix + "syntax error")
@@ -2842,45 +2871,26 @@ def process_args():
 		for verbatimFiles in args.verbatim:
 			verbatim += verbatimFiles
 
+	errPrefix = ""
+
 	if args.excludeID != None:
 		filename = args.excludeID[0][0]
-		try:
-			file = open(filename, "r")
-			file.close()
-		except IOError as err:
-			errors.append(str(err))
 		idRanges = args.excludeID[0][1:]
-		excludeIDRanges(filename, idRanges, "")
+		excludeIDRanges(filename, idRanges, errPrefix)
 
 	if args.includeID != None:
 		filename = args.includeID[0][0]
-		try:
-			file = open(filename, "r")
-			file.close()
-		except IOError as err:
-			errors.append(str(err))
-		idRanges = args.includeID[0][1:]
-		includeIDRanges(filename, idRanges, "")
+		includeIDRanges(filename, idRanges, errPrefix)
 
 	if args.excludeCountry != None:
 		filename = args.excludeCountry[0][0]
-		try:
-			file = open(filename, "r")
-			file.close()
-		except IOError as err:
-			errors.append(str(err))
 		countries = args.excludeCountry[0][1:]
-		excludeCountries(filename, countries)
+		excludeCountries(filename, countries, errPrefix)
 
 	if args.includeCountry != None:
 		filename = args.includeCountry[0][0]
-		try:
-			file = open(filename, "r")
-			file.close()
-		except IOError as err:
-			errors.append(str(err))
 		countries = args.includeCountry[0][1:]
-		includeCountries(filename, countries)
+		includeCountries(filename, countries, errPrefix)
 
 	files.extend(args.files)
 
