@@ -11,6 +11,7 @@ updated only if that new field is non-empty.
 Optionally, several other fixups are performed.  See the output of
 merge_users.py.
 
+```
 merge_users.py [-h] [--abbrevCountries] [--noAbbrevCountries]
                       [--abbrevDirections] [--noAbbrevDirections]
                       [--abbrevStates] [--noAbbrevStates] [--fixRomanNumerals]
@@ -98,6 +99,7 @@ optional arguments:
   --includeID filename [id[-id] ...], --includeIDs filename [id[-id] ...]
   --excludeCountry filename [countryname ...], --excludeCountries filename [countryname ...]
   --includeCountry filename [countryname ...], --includeCountries filename [countryname ...]
+```
 
 Examples:
 
