@@ -2373,14 +2373,6 @@ def massage_users():
 		if options["fixStateCountries"]:
 			user = fixStateCountries(user)
 
-		abbrev = countryAbbrevs.get(user["country"].upper(), "")
-		if abbrev != "":
-			user["country"] = abbrev
-
-		abbrev = stateAbbrevs.get(user["state"].upper(), "")
-		if abbrev != "":
-			user["state"] = abbrev
-
 		if options["abbrevCountries"]:
 			abbrev = countryAbbrevs.get(user["country"].upper(), "")
 			if abbrev != "":
