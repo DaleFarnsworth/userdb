@@ -2193,9 +2193,7 @@ titleCaseDict = {word : word.title() for word in titleCaseWords}
 
 stateAbbrevs = {}
 stateAbbrevsInverse = {}
-stateAbbrevsUpper = {}
 countryAbbrevsInverse = {}
-countryAbbrevsUpper = {}
 
 varbose = False
 options = {}
@@ -2375,11 +2373,11 @@ def massage_users():
 		if options["fixStateCountries"]:
 			user = fixStateCountries(user)
 
-		abbrev = countryAbbrevsUpper.get(user["country"].upper(), "")
+		abbrev = countryAbbrevs.get(user["country"].upper(), "")
 		if abbrev != "":
 			user["country"] = abbrev
 
-		abbrev = stateAbbrevsUpper.get(user["state"].upper(), "")
+		abbrev = stateAbbrevs.get(user["state"].upper(), "")
 		if abbrev != "":
 			user["state"] = abbrev
 
@@ -2813,7 +2811,6 @@ def process_args():
 			print("Error: duplicate abbreviation:", abbrev,
 				file=sys.stderr)
 		stateAbbrevsInverse[abbrev.upper()] = state
-		stateAbbrevsUpper[abbrev.upper()] = abbrev
 
 	for _, abbrevStates in alternateStateAbbrevsByCountry.iteritems():
 		for state, abbrev in abbrevStates.items():
@@ -2826,11 +2823,9 @@ def process_args():
 			print("Error: duplicate abbreviation:", abbrev,
 				file=sys.stderr)
 		countryAbbrevsInverse[abbrev.upper()] = country
-		countryAbbrevsUpper[abbrev.upper()] = abbrev
 
 	for country, abbrev in alternateCountryAbbrevs.items():
 		countryAbbrevs[country.upper()] = abbrev
-		countryAbbrevsUpper[abbrev.upper()] = abbrev
 
 	for abbrev, country in inverseCountryAbbrevs.items():
 		countryAbbrevsInverse[abbrev.upper()] = country
