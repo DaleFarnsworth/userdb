@@ -2806,7 +2806,7 @@ def process_args():
 
 	for _, abbrevStates in alternateStateAbbrevsByCountry.iteritems():
 		for state, abbrev in abbrevStates.items():
-			stateAbbrevsInverse[abbrev.upper()] = state
+			stateAbbrevs[state.upper()] = abbrev
 
 	for country, abbrev in countryAbbrevs.items():
 		countryAbbrevs[country.upper()] = abbrev
