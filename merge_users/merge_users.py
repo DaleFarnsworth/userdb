@@ -40,7 +40,7 @@ import sys
 import argparse
 import shlex
 
-version = "1.0.2"
+version = "1.0.3"
 
 optionList = [
 	dict(
