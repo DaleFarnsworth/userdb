@@ -1,0 +1,27 @@
+abbrevCountries
+abbrevStates
+fixRomanNumerals
+fixStateCountries
+header
+miscChanges
+removeCallFromNick
+removeDupSurnames
+removeMatchingNick
+removeRepeats
+titleCase
+
+noRemoveNames
+
+# excludeID /path/to/file 12345-12346 234-236 9999
+# includeID /path/to/file 12345
+
+# excludeCountry /path/to/file US	# applies only to the given filepath
+# includeCountry /path/to/file US	# applies only to the given filepath
+
+# Instead of a filename, use * to match all input filenames
+
+# excludeCountry * US		# excludes all US records from the output
+
+# files /path/to/file1 /path/to/file2 /path/to/file3 ... /patch/to/fileN
+
+# verbatim /path/to/file1 /path/to/file2 /path/to/file3 ... /path/to/fileN
